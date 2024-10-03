@@ -106,21 +106,23 @@
               'id': 'precincts-label',
               'type': 'symbol',
               'source': 'precincts_centroid',
-              'min-zoom': 12.95,
-              'text-field': [
-                  "to-string",
-                  ["get", "Precinct"]
-                ],
-              'text-size': [
-                  "interpolate",
-                  ["linear"],
-                  ["zoom"],
-                  12.95,
-                  8,
-                  22,
-                  30
-                ],
-              'text-offset': [0, -1],
+              'layout': {
+                  'min-zoom': 12.95,
+                  'text-field': [
+                      "to-string",
+                      ["get", "Precinct"]
+                    ],
+                  'text-size': [
+                      "interpolate",
+                      ["linear"],
+                      ["zoom"],
+                      12.95,
+                      8,
+                      22,
+                      30
+                    ],
+                  'text-offset': [0, -1]
+                },
               'paint': {
                   'text-color':"#424242"
               }
