@@ -72,6 +72,22 @@
     .mapboxgl-popup-anchor-top>.mapboxgl-popup-tip {
       border-bottom-color: rgb(61, 59, 59);
     }
+        #legend {
+      padding: 10px;
+      box-shadow: 0 1px 2px rgba(0 0 0 0.1);
+      line-height: 18px;
+      height: 150px;
+      margin-bottom: 40px;
+      width: 100px;
+    }
+    
+    .legend-key {
+      display: inline-block;
+      border-radius: 20%;
+      width: 10px;
+      height: 10px;
+      margin-right: 5px;
+    }
   </style>
 </head>
 
@@ -92,10 +108,10 @@
     };
     //YOUR TURN: add your Mapbox token
     
-    mapboxgl.accessToken = 'pk.eyJ1IjoidmljdG9yaWFiZWNrbGV5IiwiYSI6ImNsMXlpa3J6ZjBjeDgzY28zb2lmYm1kejIifQ.iovH6zCr8nvi07wE0SQIdA'; //Mapbox token 
+    mapboxgl.accessToken = 'pk.eyJ1IjoidmJlY2tsZXkiLCJhIjoiY2l2bjVpOXN1MDA1MzJvbjE5Y2xveWhreSJ9.5UtoVF_PlcNGeVX07j2DWg'; //Mapbox token 
     var map = new mapboxgl.Map({
       container: 'map', // container id
-      style: "mapbox://styles/victoriabeckley/cm1suyo98001901rddlcfdxct",
+      style: "mapbox://styles/vbeckley/cjvli3dx51ev01cn543p74ljq",
       center: [-122.41333,37.75877], // starting position [lng, lat]
       zoom: 10,// starting zoom
       transformRequest: transformRequest
@@ -203,6 +219,22 @@
             var bbox = turf.bbox(data);
             map.fitBounds(bbox, { padding: 50 });
 
+            // create legend
+            const legend = document.getElementById('legend');
+            
+            layers.forEach((layer, i) => {
+              const color = colors[i];
+              const item = document.createElement('div');
+              const key = document.createElement('span');
+              key.className = 'legend-key';
+              key.style.backgroundColor = color;
+            
+              const value = document.createElement('span');
+              value.innerHTML = `${layer}`;
+              item.appendChild(key);
+              item.appendChild(value);
+              legend.appendChild(item);
+            });
           });
 
         });
