@@ -52,7 +52,7 @@
         map.addSource('precincts', {
             type: 'geojson',
             // Use a URL for the value for the `data` property.
-            data: 'https://docs.mapbox.com/mapbox-gl-js/assets/earthquakes.geojson'
+            data: 'https://vbeckley.github.io/election2024/Precincts_Oct_3.geojson'
         });
 
             //Add the the layer to the map
@@ -98,13 +98,22 @@
 
             // When a click event occurs on a feature in the csvData layer, open a popup at the
             // location of the feature, with description HTML from its properties.
-            map.on('click', 'csvData', function (e) {
+            map.on('click', 'precincts_fill', function (e) {
               var coordinates = e.features[0].geometry.coordinates.slice();
 
               //set popup text
               //You can adjust the values of the popup to match the headers of your CSV.
               // For example: e.features[0].properties.Name is retrieving information from the field Name in the original CSV.
-              var description = `<h3>` + "Precinct " + e.features[0].properties.Precinct + `</h3>` + `<h4>` + `<b>` + `Early Voters (Bldg Under 20 Units): ` + `</b>` + e.features[0].properties.Early_ppl_Under_20_Units  + `</h4>` + `<h4>` + `<b>` + `Early Doors (Bldg Under 20 Units): ` + `</b>` + e.features[0].properties.Early_Doors_Under_20_Units  + `</h4>`;
+              var description = `<h3>` + "Precinct " + e.features[0].properties.Precinct + `</h3>` + 
+                `<h4>` + `<b>` + `Priority: ` + `</b>` 
+                + e.features[0].properties.Priority  + `</h4>` +
+                 `<h4>` + `<b>` + `Complete? ` + `</b>` 
+                + e.features[0].properties.Completed  + '<br>'
+                + e.features[0].properties.Who  + `</h4>` +
+                `<h4>` + `<b>` + `Early Voters (Bldg Under 20 Units): ` + `</b>` 
+                + e.features[0].properties.Early_ppl_Under_20_Units  + `</h4>` + `<h4>` 
+                + `<b>` + `Early Doors (Bldg Under 20 Units): ` + `</b>` 
+                + e.features[0].properties.Early_Doors_Under_20_Units  + `</h4>`;
 
               // Ensure that if the map is zoomed out such that multiple
               // copies of the feature are visible, the popup appears
