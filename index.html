@@ -130,7 +130,16 @@
                 'data': data
               },
               'paint': {
-                'circle-radius': 5,
+                'circle-radius': 
+                [
+                  "interpolate",
+                  ["linear"],
+                  ["zoom"],
+                  12,
+                  5,
+                  22,
+                  10
+                ],
                 'circle-color': 
                   [
                   "interpolate",
