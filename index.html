@@ -164,7 +164,7 @@
             });
 
             // Change the cursor to a pointer when the mouse is over the places layer.
-            map.on('mouseenter', 'csvData', function () {
+            map.on('mouseenter', 'precincts-fill', function () {
               map.getCanvas().style.cursor = 'pointer';
             });
 
@@ -172,30 +172,7 @@
             map.on('mouseleave', 'places', function () {
               map.getCanvas().style.cursor = '';
             });
-
-            var bbox = turf.bbox(data);
-            map.fitBounds(bbox, { padding: 50 });
-
-            // create legend
-            const legend = document.getElementById('legend');
-            
-            layers.forEach((layer, i) => {
-              const color = colors[i];
-              const item = document.createElement('div');
-              const key = document.createElement('span');
-              key.className = 'legend-key';
-              key.style.backgroundColor = color;
-            
-              const value = document.createElement('span');
-              value.innerHTML = `${layer}`;
-              item.appendChild(key);
-              item.appendChild(value);
-              legend.appendChild(item);
-            });
-          
-
-
-
+   
 
   </script>
 
