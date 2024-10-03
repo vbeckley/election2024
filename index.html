@@ -48,46 +48,31 @@
       transformRequest: transformRequest
     });
 
-    $(document).ready(function () {
-      $.ajax({
-        type: "GET",
-        //YOUR TURN: Replace with csv export link
-        // did some funny formatting here, but mostly just took the long ID to paste in vvv
-        url: 'https://docs.google.com/spreadsheets/d/1Zi6fiCfiPDg6f54opsnUfNxIOUuB6BB57fZ6pBp5wqo/gviz/tq?tqx=out:csv&sheet=Precincts',
-        dataType: "text",
-        success: function (csvData) { makeGeoJSON(csvData); }
-      });
-
-
-
-      function makeGeoJSON(csvData) {
-        csv2geojson.csv2geojson(csvData, {
-          latfield: 'Latitude',
-          lonfield: 'Longitude',
-          delimiter: ','
-        }, function (err, data) {
-          map.on('load', function () {
+    map.on('load', () => {
+        map.addSource('precincts', {
+            type: 'geojson',
+            // Use a URL for the value for the `data` property.
+            data: 'https://docs.mapbox.com/mapbox-gl-js/assets/earthquakes.geojson'
+        });
 
             //Add the the layer to the map
             map.addLayer({
-              'id': 'csvData',
-              'type': 'circle',
-              'source': {
-                'type': 'geojson',
-                'data': data
-              },
+              'id': 'precincts-line',
+              'type': 'line',
+              'source': 'precincts',
               'paint': {
-                'circle-radius': 
-                [
-                  "interpolate",
-                  ["linear"],
-                  ["zoom"],
-                  12,
-                  5,
-                  22,
-                  15
-                ],
-                'circle-color': 
+                'line-color': "#b3b3b3",
+                'line-width': 1
+              }
+            });
+
+            //Add again, this time as a fill
+            map.addLayer({
+              'id': 'precincts-fill',
+              'type': 'fill',
+              'source': 'precincts',
+              'paint': {
+                  'fill-color':
                   [
                   "interpolate",
                   ["linear"],
@@ -97,7 +82,7 @@
                     "Early_ppl_Under_20_Units"
                   ]],
                   1,
-                  "#e9a3c9", 
+                  "#e9a3c9",
                   100,
                   "#fde0ef",
                   200,
@@ -109,7 +94,7 @@
                 ]
               }
             });
-
+    });
 
             // When a click event occurs on a feature in the csvData layer, open a popup at the
             // location of the feature, with description HTML from its properties.
@@ -169,8 +154,6 @@
           });
 
         });
-      };
-    });
 
 
 
