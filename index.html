@@ -108,10 +108,7 @@
               'source': 'precincts_centroid',
               'minzoom': 12.95,
               'layout': {
-                  'text-field': [
-                      "to-string",
-                      ["get", "Precinct"]
-                    ],
+                  'text-field': ["get", "prec_2022"],
                   'text-size': [
                       "interpolate",
                       ["linear"],
