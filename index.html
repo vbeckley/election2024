@@ -55,17 +55,6 @@
             data: 'https://vbeckley.github.io/election2024/Precincts_Oct_3.geojson'
         });
 
-            //Add the the layer to the map
-            map.addLayer({
-              'id': 'precincts-line',
-              'type': 'line',
-              'source': 'precincts',
-              'paint': {
-                'line-color': "#b3b3b3",
-                'line-width': 1
-              }
-            });
-
             //Add again, this time as a fill
             map.addLayer({
               'id': 'precincts-fill',
@@ -91,7 +80,44 @@
                   "#a1d76a",
                   422,
                   "#3b7019"
-                ]
+                ],
+                'fill-opacity': .5
+              }
+            });
+
+            //Add the the layer to the map
+            map.addLayer({
+              'id': 'precincts-line',
+              'type': 'line',
+              'source': 'precincts',
+              'paint': {
+                'line-color': "#b3b3b3",
+                'line-width': 1
+              }
+            });
+      
+          //Add again, this time as a label
+            map.addLayer({
+              'id': 'precincts-label',
+              'type': 'symbol',
+              'source': 'precincts',
+              'min-zoom': 12.95,
+              'text-field': [
+                  "to-string",
+                  ["get", "Precinct"]
+                ],
+              'text-size': [
+                  "interpolate",
+                  ["linear"],
+                  ["zoom"],
+                  12.95,
+                  8,
+                  22,
+                  30
+                ],
+              'text-offset': [0, -1],
+              'paint': {
+                  'text-color':"#424242"
               }
             });
     });
