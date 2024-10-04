@@ -20,10 +20,13 @@
   <script src="https://cdn.jsdelivr.net/npm/es6-promise@4/dist/es6-promise.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/es6-promise@4/dist/es6-promise.auto.min.js"></script>
   <link rel="stylesheet" href="style.css" />
+  body { margin: 0; padding: 0; }
+  #map { position: absolute; top: 0; bottom: 0; width: 100%; }
 </head>
-
+  
 <body>
 
+  <nav id="menu"></nav>
   <div id='map'></div>
   <script>
 
@@ -48,6 +51,26 @@
     });
 
     map.on('load', () => {
+       //////////////////SUPERVISOR POLYGONS/////////////////////////////////////
+           map.addSource('sup-dist', {
+            type: 'geojson',
+            // Use a URL for the value for the `data` property.
+            data: 'https://vbeckley.github.io/election2024/Supervisor_Districts.geojson'
+          });
+            //Add the the layer to the map
+            map.addLayer({
+              'id': 'sup-line',
+              'type': 'line',
+              'source': 'sup-dist',
+              'layout': {
+                  'visibility': 'visible',
+              },
+              'paint': {
+                'line-color': "#8c8c8c",
+                'line-width': 2
+              }
+            });
+      
       //////////////////PRECINCT POLYGON//////////////////////////////////
         map.addSource('precincts', {
             type: 'geojson',
@@ -57,9 +80,12 @@
 
             //Add again, this time as a fill
             map.addLayer({
-              'id': 'precincts-fill',
+              'id': 'Early Voters',
               'type': 'fill',
               'source': 'precincts',
+              'layout': {
+                  'visibility': 'visible',
+                },
               'paint': {
                   'fill-color':
                   [
@@ -84,7 +110,31 @@
                 'fill-opacity': .5
               }
             });
-
+            //////////////////COMPLETED PRECINCTS///////////////
+             map.addLayer({
+              'id': 'Complete',
+              'type': 'fill',
+              'source': 'precincts',
+              'layout': {
+                  'visibility': 'none',
+                },
+              'filter':[
+                "all",
+                [
+                  "match",
+                  ["get", "Completed"],
+                  ["0"],
+                  false,
+                  true
+                ]
+              ],
+              'paint': {
+                  'fill-color':
+                  '#eba123',
+              }
+            });
+      
+             //////////////////PRECINCT LINES////////////////// 
             //Add the the layer to the map
             map.addLayer({
               'id': 'precincts-line',
@@ -95,8 +145,34 @@
                 'line-width': 1
               }
             });
+      
+          ///////////////////PRIORITY PRECINCTS/////////////////
+            map.addLayer({
+              'id': 'Priority Precincts',
+              'type': 'line',
+              'source': 'precincts',
+              'layout': {
+                  'visibility': 'none'
+              },
+              'filter':
+                [
+                  "all",
+                  [
+                    "match",
+                    ["get", "Priority"],
+                    [1],
+                    true,
+                    false
+                  ]
+                ],
+              'paint': {
+                'line-color': "#111111",
+                'line-width': 2
+              }
+            });
+      
           //////////////////PRECINCT CENTROIDS FOR LABEL////////////////// 
-          map.addSource('precincts_centroid', {
+          map.addSource('precincts-centroid', {
             type: 'geojson',
             // Use a URL for the value for the `data` property.
             data: 'https://vbeckley.github.io/election2024/Precincts_Centroid.geojson'
@@ -106,7 +182,7 @@
             map.addLayer({
               'id': 'precincts-label',
               'type': 'symbol',
-              'source': 'precincts_centroid',
+              'source': 'precincts-centroid',
               'minzoom': 12.95,
               'layout': {
                   'text-field': ["get", "prec_2022"],
@@ -125,62 +201,19 @@
                   'text-color':"#424242"
               }
             });
-      
-          //////////////////SUPERVISOR POLYGONS/////////////////////////////////////
-           map.addSource('sup_dist', {
-            type: 'geojson',
-            // Use a URL for the value for the `data` property.
-            data: 'https://vbeckley.github.io/election2024/Supervisor_Districts.geojson'
-          });
-            //Add the the layer to the map
-            map.addLayer({
-              'id': 'sup-line',
-              'type': 'line',
-              'source': 'sup_dist',
-              'paint': {
-                'line-color': "#8c8c8c",
-                'line-width': 2
-              }
-            });
-      
-            //////////////////SUPERVISOR DISTRICTS CENTROIDS FOR LABEL////////////////// 
-                map.addSource('sup_centroid', {
-            type: 'csv',
-            // Use a URL for the value for the `data` property.
-            data: 'https://vbeckley.github.io/election2024/sup_pt_xy.csv'
-            });
-      
-          //Add again, this time as a label
-            map.addLayer({
-              'id': 'sup_label',
-              'type': 'symbol',
-              'source': 'sup_centroid',
-              'maxzoom': 14,
-              'layout': {
-                  'text-field': ["get", "sup_dist"],
-                  'text-size': [
-                      "interpolate",
-                      ["linear"],
-                      ["zoom"],
-                      10,
-                      16,
-                      22,
-                      70
-                    ]
-                },
-              'paint': {
-                  'text-color':"#a6a6a6",
-                  'text-halo-color': "#f7f7f7",
-                  'text-halo-width': 3
-              }
-            });
 
         ///////////////////POPUP///////////////////////////////////////
         // When a click event occurs on a feature in the polygon fill layer,
         // open a popup at the location of the click, with description
         // HTML from the click event's properties.
-        map.on('click', 'precincts-fill', (e) => {
-          const description = `<h3>` + "Precinct " + e.features[0].properties.Precinct + `</h3>` + 
+        map.on('click', 'Early Voters', (e) => {
+  //        const priority = e.features[0].properties.Priority;
+    //      if (priority == 0) {
+      //          priority = "";
+        //      } else {
+          //      priority = priority;
+            //  }
+          var description = `<h3>` + "Precinct " + e.features[0].properties.Precinct + `</h3>` + 
                 `<h4>` + `<b>` + `Priority: ` + `</b>` 
                 + e.features[0].properties.Priority  + `</h4>` +
                  `<h4>` + `<b>` + `Complete? ` + `</b>` 
@@ -198,17 +231,71 @@
 
         // Change the cursor to a pointer when
         // the mouse is over the states layer.
-        map.on('mouseenter', 'precincts-fill', () => {
+        map.on('mouseenter', 'Early Voters', () => {
             map.getCanvas().style.cursor = 'pointer';
         });
 
         // Change the cursor back to a pointer
         // when it leaves the states layer.
-        map.on('mouseleave', 'precincts-fill', () => {
+        map.on('mouseleave', 'Early Voters', () => {
             map.getCanvas().style.cursor = '';
         });
 });
-              
+
+    ////////////////////////LAYER TOGGLE///////////////////////////////////
+    // After the last frame rendered before the map enters an "idle" state
+    map.on('idle', () => {
+        // If these two layers were not added to the map, abort
+        if (!map.getLayer('Early Voters') || !map.getLayer('Priority Precincts')) {
+            return;
+        }
+
+        // Enumerate ids of the layers.
+        const toggleableLayerIds = ['Early Voters', 'Priority Precincts','Complete'];
+
+        // Set up the corresponding toggle button for each layer.
+        for (const id of toggleableLayerIds) {
+            // Skip layers that already have a button set up.
+            if (document.getElementById(id)) {
+                continue;
+            }
+
+            // Create a link.
+            const link = document.createElement('a');
+            link.id = id;
+            link.href = '#';
+            link.textContent = id;
+            link.className = 'active';
+
+            // Show or hide layer when the toggle is clicked.
+            link.onclick = function (e) {
+                const clickedLayer = this.textContent;
+                e.preventDefault();
+                e.stopPropagation();
+
+                const visibility = map.getLayoutProperty(
+                    clickedLayer,
+                    'visibility'
+                );
+
+                // Toggle layer visibility by changing the layout object's visibility property.
+                if (visibility === 'visible') {
+                    map.setLayoutProperty(clickedLayer, 'visibility', 'none');
+                    this.className = '';
+                } else {
+                    this.className = 'active';
+                    map.setLayoutProperty(
+                        clickedLayer,
+                        'visibility',
+                        'visible'
+                    );
+                }
+            };
+
+            const layers = document.getElementById('menu');
+            layers.appendChild(link);
+        }
+    });
 
   </script>
 
