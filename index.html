@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html>
+
 <head>
   <meta charset='utf-8' />
   <title>SF Precincts</title>
@@ -74,7 +75,7 @@
         map.addSource('precincts', {
             type: 'geojson',
             // Use a URL for the value for the `data` property.
-            data: 'https://vbeckley.github.io/election2024/Precincts_Oct_3.geojson'
+            data: 'https://vbeckley.github.io/election2024/Precincts_Oct_7.geojson'
         });
 
             //Add again, this time as a fill
@@ -111,7 +112,7 @@
             });
             //////////////////COMPLETED PRECINCTS///////////////
              map.addLayer({
-              'id': 'Complete',
+              'id': 'Complete (Updated Oct 7, 11am)',
               'type': 'fill',
               'source': 'precincts',
               'layout': {
@@ -126,7 +127,8 @@
                   false,
                   true
                 ]
-              ],
+              ]
+              ,
               'paint': {
                   'fill-color':
                   '#eba123',
@@ -159,14 +161,24 @@
                   [
                     "match",
                     ["get", "Priority"],
-                    [1],
+                    [1,2,3],
                     true,
                     false
                   ]
-                ],
+                ], 
               'paint': {
-                'line-color': "#111111",
-                'line-width': 2
+                'line-color': '#111111',
+                'line-width': [
+                "match",
+                ["get", "Priority"],
+                [1],
+                4,
+                [2],
+                3,
+                [3],
+                2,
+                1
+              ]
               }
             });
       
@@ -250,7 +262,7 @@
         }
 
         // Enumerate ids of the layers.
-        const toggleableLayerIds = ['Early Voters', 'Priority Precincts','Complete'];
+        const toggleableLayerIds = ['Early Voters', 'Priority Precincts','Complete (Updated Oct 7, 11am)'];
 
         // Set up the corresponding toggle button for each layer.
         for (const id of toggleableLayerIds) {
