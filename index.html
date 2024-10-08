@@ -319,7 +319,13 @@
             link.id = id;
             link.href = '#';
             link.textContent = id;
-            link.className = 'active';
+
+            const visibility = map.getLayoutProperty(id,'visibility');
+            if (visibility ==== 'visible' || visibility === undefined){
+              link.className = 'active';
+              else {
+              link.className = '';
+            }
 
             // Show or hide layer when the toggle is clicked.
             link.onclick = function (e) {
