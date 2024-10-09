@@ -364,7 +364,12 @@
             layers.appendChild(link);
         }
     });
-
+    
+    const nav = new mapboxgl.NavigationControl({
+        showCompass: false
+    });
+    map.addControl(nav, 'bottom-left');
+    
   </script>
 
 </body>
